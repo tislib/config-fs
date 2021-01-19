@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -170,7 +171,7 @@ func (b *Backend) runWriteOperationItem(db *mongo.Database, collection string, l
 
 		recordIds = append(recordIds, item)
 
-		content, err := os.ReadFile(path)
+		content, err := ioutil.ReadFile(path)
 
 		var record = new(primitive.M)
 
