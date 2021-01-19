@@ -21,5 +21,5 @@ config-fs read -d ug -c "website" --connection="mongodb://10.0.1.77:27017" /User
 
 read fs and store records in database ug
 
-config-fs read -d ug -c "website" --connection="mongodb://10.0.1.77:27017" /Users/taleh/Projects/config-fs/test
+config-fs write -d ug -c "website" --connection="mongodb://10.0.1.77:27017" /Users/taleh/Projects/config-fs/test
 
