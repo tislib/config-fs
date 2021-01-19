@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/yaml.v2"
@@ -173,16 +172,13 @@ func (b *Backend) runWriteOperationItem(db *mongo.Database, collection string, l
 
 		content, err := ioutil.ReadFile(path)
 
-		var record = new(primitive.M)
-
+		var record = new(interface{})
 		dieIfError(err)
 
 		err = yaml.Unmarshal(content, record)
 
-		dieIfError(err)
-
 		filter := bson.M{"_id": item}
-		update := bson.M{"$set": record}
+		update := bson.M{"$set": convert(record)}
 		opts := new(options.UpdateOptions)
 		opts.Upsert = new(bool)
 		*opts.Upsert = true
@@ -235,4 +231,22 @@ func contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+func convert(i interface{}) interface{} {
+	switch x := i.(type) {
+	case map[interface{}]interface{}:
+		m2 := map[string]interface{}{}
+		for k, v := range x {
+			m2[k.(string)] = convert(v)
+		}
+		return m2
+	case *interface{}:
+		return convert(*i.(*interface{}))
+	case []interface{}:
+		for i, v := range x {
+			x[i] = convert(v)
+		}
+	}
+	return i
 }
