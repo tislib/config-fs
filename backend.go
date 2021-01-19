@@ -7,7 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/yaml.v2"
-	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
@@ -105,7 +104,7 @@ func (b *Backend) runReadOperationItem(db *mongo.Database, collection string, lo
 
 	dieIfError(cursor.Close(context.TODO()))
 
-	dieIfError(filepath.Walk(location, func(path string, info fs.FileInfo, err error) error {
+	dieIfError(filepath.Walk(location, func(path string, info os.FileInfo, err error) error {
 		item := path[len(location):]
 		if item == "" || !strings.HasSuffix(item, ".yml") {
 			return nil
@@ -161,7 +160,7 @@ func (b *Backend) runWriteOperationItem(db *mongo.Database, collection string, l
 
 	var recordIds []string
 
-	dieIfError(filepath.Walk(location, func(path string, info fs.FileInfo, err error) error {
+	dieIfError(filepath.Walk(location, func(path string, info os.FileInfo, err error) error {
 		item := path[len(location):]
 		if item == "" || !strings.HasSuffix(item, ".yml") {
 			return nil
