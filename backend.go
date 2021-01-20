@@ -177,6 +177,8 @@ func (b *Backend) runWriteOperationItem(db *mongo.Database, collection string, l
 
 		err = yaml.Unmarshal(content, record)
 
+		dieIfError(err)
+
 		filter := bson.M{"_id": item}
 		update := bson.M{"$set": convert(record)}
 		opts := new(options.UpdateOptions)
